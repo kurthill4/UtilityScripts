@@ -1,0 +1,19 @@
+# Start from the base Jupyter minimal-notebook image
+FROM jupyter/minimal-notebook
+
+# Copy the requirements.txt file into the Docker image
+COPY requirements.txt /tmp/requirements.txt
+
+USER root
+# Install the Python packages listed in requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt && \
+    rm /tmp/requirements.txt
+
+
+USER jovyan
+
+# (Optional) Expose the Jupyter Notebook port (8888) if you plan to access it from outside the container
+EXPOSE 8888
+
+# Set the default command to start Jupyter Notebook (already handled by the base image)
+# CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root"]

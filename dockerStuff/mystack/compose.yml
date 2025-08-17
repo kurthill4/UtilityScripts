@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  registry_cache_docker_io:
+    image: registry:3
+    container_name: registry_cache_docker_io
+    ports:
+      - "5000:5000"
+    volumes:
+      - registry_cache_data:/var/lib/registry
+    environment:
+      - REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io
+
+  registry_cache_ghcr_io:
+    image: registry:3
+    container_name: registry_cache_ghcr_io
+    ports:
+      - "5001:5000"
+    volumes:
+      - registry_cache_data:/var/lib/registry
+    environment:
+      - REGISTRY_PROXY_REMOTEURL=https://ghcr.io
+
+  registry_cache_lscr_io:
+    image: registry:3
+    container_name: registry_cache_lscr_io
+    ports:
+      - "5002:5000"
+    volumes:
+      - registry_cache_data:/var/lib/registry
+    environment:
+      - REGISTRY_PROXY_REMOTEURL=https://lscr.io
+
+  registry_local:
+    image: registry:3
+    container_name: registry_local
+    ports:
+      - "5010:5000"
+    volumes:
+      - registry_cache_data:/var/lib/registry
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:latest
+    container_name: open-webui
+    ports:
+      - "3000:8080" 						# Map host port 3000 to container port 8080 (Open WebUI)
+    volumes:
+      - open-webui_data:/app/backend/data # Persistent storage for Open WebUI data
+    environment:
+      # Optional: To disable authentication for single-user mode
+      # - WEBUI_AUTH=False
+      # Optional: If you have an Ollama server running, specify its URL
+       - OLLAMA_BASE_URL=http://${OLLAMA_HOST}:11434
+    networks:
+      - openwebui-network 				# Connect to a dedicated Docker network
+
+  jupyter:
+    image: jupyter/minimal-notebook:latest
+    container_name: jupyter-notebook
+    ports:
+      - "8888:8888" 						# Map host port 8888 to container port 8888 (Jupyter)
+    volumes:
+      - jupyter_data:/home/jovyan/work 	# Persistent storage for Jupyter notebooks
+    environment:
+      - JUPYTER_ENABLE_LAB=yes 		# Enable JupyterLab interface
+      - JUPYTER_TOKEN=JupyterToken	# Set a token for Jupyter access
+    networks:
+      - openwebui-network 				# Connect to the same network as Open WebUI
+
+networks:
+  openwebui-network:
+    driver: bridge # Create a bridge network for containers to communicate
+
+volumes:
+  open-webui_data:
+    name: "openwebuijupyterstack_open-webui_data" 
+  jupyter_data:
+  registry_cache_data:
+  registry_local_data:
+
+
