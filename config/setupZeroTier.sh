@@ -76,6 +76,6 @@ fi
 
 # Check the status to confirm it's working
 echo "-> Checking ZeroTier status..."
-sudo /usr/sbin/zerotier-cli -D "$PERSISTENT_ZT_DIR" status
+sudo /usr/sbin/zerotier-cli -D"$PERSISTENT_ZT_DIR" status
 
 echo "ZeroTier has been started and is using the persistent identity."
