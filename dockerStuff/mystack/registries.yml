@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  registry_cache_docker_io:
+    image: registry:3
+    container_name: registry_cache_docker_io
+    ports:
+      - "5000:5000"
+    volumes:
+      - registry_cache_docker:/var/lib/registry
+    environment:
+      - REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io
+      - REGISTRY_LOG_LEVEL=warn
+      - OTEL_SDK_DISABLED=true
+      - OTEL_TRACES_EXPORTER=none
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_LOGS_EXPORTER=none
+
+  registry_cache_ghcr_io:
+    image: registry:3
+    container_name: registry_cache_ghcr_io
+    ports:
+      - "5001:5000"
+    volumes:
+      - registry_cache_ghcr:/var/lib/registry
+    environment:
+      - REGISTRY_PROXY_REMOTEURL=https://ghcr.io
+      - OTEL_SDK_DISABLED=true
+      - OTEL_TRACES_EXPORTER=none
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_LOGS_EXPORTER=none
+
+  registry_cache_lscr_io:
+    image: registry:3
+    container_name: registry_cache_lscr_io
+    ports:
+      - "5002:5000"
+    volumes:
+      - registry_cache_lscr:/var/lib/registry
+    environment:
+      - REGISTRY_PROXY_REMOTEURL=https://lscr.io
+      - OTEL_SDK_DISABLED=true
+      - OTEL_TRACES_EXPORTER=none
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_LOGS_EXPORTER=none
+
+  registry_local:
+    image: registry:3
+    container_name: registry_local
+    ports:
+      - "5010:5000"
+    volumes:
+      - registry_cache_local:/var/lib/registry
+    environment:
+      - OTEL_SDK_DISABLED=true
+      - OTEL_TRACES_EXPORTER=none
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_LOGS_EXPORTER=none
+
+
+volumes:
+  registry_cache_docker:
+  registry_cache_ghcr:
+  registry_cache_lscr:
+  registry_cache_local:
+
+
