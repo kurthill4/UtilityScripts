@@ -1,44 +1,6 @@
 version: '3.8'
 
 services:
-  registry_cache_docker_io:
-    image: registry:3
-    container_name: registry_cache_docker_io
-    ports:
-      - "5000:5000"
-    volumes:
-      - registry_cache_data:/var/lib/registry
-    environment:
-      - REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io
-
-  registry_cache_ghcr_io:
-    image: registry:3
-    container_name: registry_cache_ghcr_io
-    ports:
-      - "5001:5000"
-    volumes:
-      - registry_cache_data:/var/lib/registry
-    environment:
-      - REGISTRY_PROXY_REMOTEURL=https://ghcr.io
-
-  registry_cache_lscr_io:
-    image: registry:3
-    container_name: registry_cache_lscr_io
-    ports:
-      - "5002:5000"
-    volumes:
-      - registry_cache_data:/var/lib/registry
-    environment:
-      - REGISTRY_PROXY_REMOTEURL=https://lscr.io
-
-  registry_local:
-    image: registry:3
-    container_name: registry_local
-    ports:
-      - "5010:5000"
-    volumes:
-      - registry_cache_data:/var/lib/registry
-
   open-webui:
     image: ghcr.io/open-webui/open-webui:latest
     container_name: open-webui
