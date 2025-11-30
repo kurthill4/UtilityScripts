@@ -50,12 +50,26 @@ services:
       # Optional: To disable authentication for single-user mode
       # - WEBUI_AUTH=False
       # Optional: If you have an Ollama server running, specify its URL
-       - OLLAMA_BASE_URL=http://${OLLAMA_HOST}:11434
+      - OLLAMA_BASE_URL=http://${OLLAMA_HOST}:11434
+
+      - ENABLE_CODE_INTERPRETER=True
+
+      # Force Jupyter as the engine
+      - CODE_EXECUTION_ENGINE=jupyter
+      - CODE_EXECUTION_JUPYTER_URL=http://jupyter:8888
+      - CODE_EXECUTION_JUPYTER_AUTH=token
+      - CODE_EXECUTION_JUPYTER_AUTH_TOKEN=JupyterToken
+
+      - CODE_INTERPRETER_ENGINE=jupyter
+      - CODE_INTERPRETER_JUPYTER_URL=http://jupyter:8888
+      - CODE_INTERPRETER_JUPYTER_AUTH=token
+      - CODE_INTERPRETER_JUPYTER_AUTH_TOKEN=JupyterToken  
+    
     networks:
       - openwebui-network 				# Connect to a dedicated Docker network
 
   jupyter:
-    image: jupyter/minimal-notebook:latest
+    image: myjupyter:latest
     container_name: jupyter-notebook
     ports:
       - "8888:8888" 						# Map host port 8888 to container port 8888 (Jupyter)
